@@ -5,13 +5,13 @@ actual model outputs recorded during a run, with analysis of why each fails.
 
 ---
 
-## Results
-
 ### 1. Sarcasm
 
 **Input:** "Oh great, another meeting that could have been an email."
 **Expected:** annoyance / anger
 **Got:** ADMIRATION — 94.4%
+
+![Sarcasm prediction](../assets/failure_cases/sarcasm.png)
 
 The model reads "great" and "could have been an email" as straightforwardly
 positive. It has no sarcasm signal — GoEmotions contains very little labelled
@@ -25,11 +25,11 @@ sarcasm. The high confidence (94.4%) makes this worse: it's confidently wrong.
 **Expected:** annoyance / disappointment
 **Got:** DISAPPROVAL — 47.9%
 
+![Negation prediction](../assets/failure_cases/negation.png)
+
 Partial success. The model correctly identifies a negative valence but maps it
-to "disapproval" rather than "annoyance" or "disappointment". The negation
-("not happy") was not treated as "happy" here — but the specific emotion
-bucket is off. The confidence is also relatively low (47.9%), suggesting
-the model is uncertain.
+to "disapproval" rather than "annoyance" or "disappointment". The confidence
+is also relatively low (47.9%), suggesting the model is uncertain.
 
 ---
 
@@ -39,11 +39,12 @@ the model is uncertain.
 **Expected:** grief + joy simultaneously
 **Got:** JOY — 52.8%
 
-The model catches the dominant positive signal ("best day of my life") and
-ignores the grief clause entirely. This is a fundamental limitation of
-single-label classification — it cannot output two emotions at once. The
-low confidence (52.8%) suggests the model is sensing conflict but resolving
-it by picking the louder signal.
+![Mixed emotion prediction](../assets/failure_cases/mixed_emotion.png)
+
+The model catches the dominant positive signal and ignores the grief clause
+entirely. This is a fundamental limitation of single-label classification —
+it cannot output two emotions at once. The low confidence (52.8%) suggests
+the model is sensing conflict but resolving it by picking the louder signal.
 
 ---
 
@@ -53,11 +54,12 @@ it by picking the louder signal.
 **Expected:** grief / sadness
 **Got:** AMBIGUOUS — neutral at 33.0% (below threshold)
 
+![Indirect grief prediction](../assets/failure_cases/indirect_grief.png)
+
 The ambiguity flag fired correctly here. No single emotion crossed 35%
-confidence. The model doesn't have enough linguistic signal to commit — the
-sentence contains no overt emotional vocabulary. This is the failure mode
-where our ambiguity threshold actually helps: rather than falsely outputting
-"neutral" with confidence, it honestly says it doesn't know.
+confidence. Rather than falsely outputting "neutral" with confidence, the
+threshold honestly flags it as uncertain — this is the one case where the
+safety net worked as intended.
 
 ---
 
@@ -67,11 +69,12 @@ where our ambiguity threshold actually helps: rather than falsely outputting
 **Expected:** disgust / anger
 **Got:** FEAR — 88.8%
 
+![Reversed intensifier prediction](../assets/failure_cases/reversed_intensifier.png)
+
 "Absolutely" is a high-magnitude intensifier the model associates with
 positive contexts. Combined with "terrible", it produces a signal the model
-interprets as extreme negative arousal — which maps to fear rather than
-disgust or anger. The confidence (88.8%) again reflects a model that has
-learned a pattern, not the actual semantic content.
+interprets as extreme negative arousal — mapping to fear rather than disgust
+or anger. Confidently wrong at 88.8%.
 
 ---
 
@@ -81,11 +84,13 @@ learned a pattern, not the actual semantic content.
 **Expected:** anger / annoyance
 **Got:** ADMIRATION — 82.0%
 
+![Professional anger prediction](../assets/failure_cases/professional_anger.png)
+
 "I would appreciate it" is grammatically a polite request, and "appreciate"
-is a word strongly associated with gratitude and admiration in training data.
-The anger is entirely suppressed by register. This is the most socially
-common failure mode — professional and formal language routinely masks
-strong emotions that the model cannot detect.
+is strongly associated with gratitude and admiration in training data. The
+anger is entirely suppressed by register. This is the most socially common
+failure mode — professional language routinely masks strong emotions the
+model cannot detect.
 
 ---
 
@@ -106,7 +111,6 @@ strong emotions that the model cannot detect.
 
 Sarcasm and polite/professional register are the two most dangerous failure
 modes because the model produces high-confidence wrong predictions. The
-ambiguity threshold (Cell 4) helps for genuinely uncertain cases but does
-not protect against confident errors. Mixed emotion is an architectural
-limitation — no single-label classifier can solve it without changing the
-output format.
+ambiguity threshold helps for genuinely uncertain cases but does not protect
+against confident errors. Mixed emotion is an architectural limitation — no
+single-label classifier can solve it without changing the output format.
