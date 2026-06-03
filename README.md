@@ -114,16 +114,18 @@ See `docs/failure_analysis.md` for qualitative failure analysis.
 ```text
 emotion-detection-nlp/
 │
-├── emotion_detection.ipynb      # Main notebook (9 cells)
+├── emotion_detection.ipynb     
 ├── requirements.txt
 ├── README.md
 │
 ├── docs/
-│   ├── failure_analysis.md      # Real outputs from Cell 8 + analysis
+│   ├── failure_analysis.md      
 │   └── emotion_map.md           # 28→6 class mapping with reasoning
 │
 └── assets/
-    └── sample_outputs/          # Screenshots of plots (add manually after running)
+    └── sample_outputs/
+    └── failure_cases/
+      
 ```
 
 ---
