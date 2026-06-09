@@ -1,6 +1,6 @@
-# Emotion Detection from Text
+# EmotiXAI: Explainable Fine-Grained Emotion Detection
 
-An NLP project that goes beyond basic sentiment analysis — predicts fine-grained emotions from text with confidence scores, word-level explainability (LIME + SHAP), and multi-sentence emotion trend visualisation.
+An NLP project that goes beyond basic sentiment analysis - predicts fine-grained emotions from text with confidence scores, word-level explainability (LIME + SHAP), and multi-sentence emotion trend visualisation.
 
 Built in Google Colab using only free, open-source tools.
 
@@ -10,7 +10,7 @@ Built in Google Colab using only free, open-source tools.
 
 | Feature                         | Detail                                                                                 |
 | ------------------------------- | -------------------------------------------------------------------------------------- |
-| 28-class emotion classification | `SamLowe/roberta-base-go_emotions` — RoBERTa fine-tuned on Google's GoEmotions dataset |
+| 28-class emotion classification | `SamLowe/roberta-base-go_emotions` - RoBERTa fine-tuned on Google's GoEmotions dataset |
 | Full confidence distribution    | Bar chart of all 28 emotion scores per input                                           |
 | Ambiguity detection             | Flags prediction as "ambiguous" if top score < 35%                                     |
 | Language guard                  | Warns before inference if input is not English                                         |
